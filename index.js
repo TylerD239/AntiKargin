@@ -26,7 +26,7 @@ command.hear('/start', async (context) => {
 })
 
 vk.updates.on('message_new', async (context, next) => {
-    const callback = context.senderId != config.kargin_id ? logBadWord.bind(this, context) : deleteMessage.bind(this.context);
+    const callback = context.senderId != config.kargin_id ? logBadWord.bind(this, context) : deleteMessage.bind(this, context);
     check(context.text, callback);
     next();
 });
