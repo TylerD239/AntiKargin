@@ -2,6 +2,9 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('db');
 
 function check(string, callback) {
+    if (!string) {
+        return;
+    }
     string = prepareString(string);
     db.all("SELECT word FROM words", (error, rows) => {
         if (error) {

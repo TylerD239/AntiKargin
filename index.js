@@ -24,11 +24,12 @@ command.hear('/start', async (context) => {
     context.send('Ну всё Антон, пизда тебе');
 })
 
-vk.updates.on('message_new', async (context) => {
+vk.updates.on('message_new', async (context, next) => {
     const text = context.text;
-    if (text.includes(COMMANDS.ADD)) {
+    if (text && text.includes(COMMANDS.ADD)) {
         add(text.substring(COMMANDS.ADD.length + 1));
     }
+    next();
 });
 
 vk.updates.on('message_new', async (context) => {
