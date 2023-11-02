@@ -62,6 +62,7 @@ function deleteMessage(context) {
         delete_for_all: 1,
     });
     wordsFilter.save(context.text)
+    context.send('Тут было сообщение @lightofdawn с демонстрацией желания иметь половую связь с мужчинами');
 }
 
 vk.updates.start()
