@@ -52,13 +52,15 @@ function showAllWords(context, words) {
 }
 
 function logBadWord(context) {
-    context.send('Я бы это удалил, будь ты каргиным', {
-        forward: JSON.stringify({
-            peer_id: context.peerId,
-            conversation_message_ids: [context.conversationMessageId],
-            is_reply: 1,
-        })
-    });
+    if (config.response_for_not_kargin) {
+        context.send('Я бы это удалил, будь ты каргиным', {
+            forward: JSON.stringify({
+                peer_id: context.peerId,
+                conversation_message_ids: [context.conversationMessageId],
+                is_reply: 1,
+            })
+        });
+    }
 }
 
 function deleteMessage(context) {
@@ -68,7 +70,7 @@ function deleteMessage(context) {
         delete_for_all: 1,
     });
     wordsFilter.save(context.text)
-    context.send('Тут было сообщение @lightofdawn с демонстрацией желания иметь половую связь с мужчинами');
+    context.send('Тут было сообщение @lightofdawn(Каргина) с демонстрацией желания иметь половую связь с мужчинами');
 }
 
 vk.updates.start()
