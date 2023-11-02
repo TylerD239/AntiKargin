@@ -17,6 +17,15 @@ function check(string, callback) {
         }
     });
 }
+function show(callback) {
+    db.all("SELECT word FROM words", (error, rows) => {
+        if (error) {
+            console.error(error);
+            return;
+        }
+        callback(rows.map(row => row.word));
+    });
+}
 
 function add(word) {
     if (!word) {
@@ -34,6 +43,8 @@ function add(word) {
     );
 }
 
+
+
 function prepareString(string) {
     return string.replace(/[^a-zA-Zа-яА-Я]/g, '').toLowerCase();
 }
@@ -42,6 +53,7 @@ function prepareString(string) {
 
 module.exports.check = check;
 module.exports.add = add;
+module.exports.show = show;
 
 
 

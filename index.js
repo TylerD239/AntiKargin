@@ -2,10 +2,11 @@ const
     { VK } = require('vk-io'),
     { HearManager } = require('@vk-io/hear'),
     config = require('./config.json'),
-    { check, add } = require('./wordsFilter');
+    { check, add, show } = require('./wordsFilter');
 
 const COMMANDS = {
-    ADD: '/add'
+    ADD: '/add',
+    SHOW: '/show'
 }
 
 const vk = new VK({token: config.vk_token});
@@ -25,17 +26,25 @@ command.hear('/start', async (context) => {
 })
 
 vk.updates.on('message_new', async (context, next) => {
+    const callback = context.senderId != config.kargin_id ? logBadWord.bind(this, context) : deleteMessage.bind(this.context);
+    check(context.text, callback);
+    next();
+});
+
+vk.updates.on('message_new', async (context, next) => {
     const text = context.text;
     if (text && text.includes(COMMANDS.ADD)) {
         add(text.substring(COMMANDS.ADD.length + 1));
     }
+    if (text && text.includes(COMMANDS.SHOW)) {
+        show(showAllWords.bind(this, context));
+    }
     next();
 });
 
-vk.updates.on('message_new', async (context) => {
-    const callback = context.senderId != config.kargin_id ? logBadWord.bind(this, context) : deleteMessage.bind(this.context);
-    check(context.text, callback);
-});
+function showAllWords(context, words) {
+    context.send(words.join(' '));
+}
 
 function logBadWord(context) {
     context.send('я бы это удалил, будь ты каргиным');
