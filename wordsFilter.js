@@ -17,7 +17,7 @@ function check(string, callback) {
 }
 
 function prepareString(string) {
-    return string.replace(/[^a-zA-Zа-яА-Я]/g, '');
+    return string.replace(/[^a-zA-Zа-яА-Я]/g, '').toLowerCase();
 }
 
 module.exports = check;

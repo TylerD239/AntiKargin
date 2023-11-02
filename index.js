@@ -23,7 +23,7 @@ command.hear('/start', async (context) => {
 
 vk.updates.on('message_new', async (context) => {
     if (context.senderId != config.kargin_id) {
-        return;
+        // return;
     }
     check(context.text, () => deleteMessage(context.conversationMessageId, context.peerId))
 });
