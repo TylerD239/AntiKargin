@@ -2,7 +2,7 @@ const
     { VK } = require('vk-io'),
     { HearManager } = require('@vk-io/hear'),
     config = require('./config.json'),
-    { check, add, show } = require('./wordsFilter');
+    wordsFilter = require('./wordsFilter');
 
 const COMMANDS = {
     ADD: '/add',
@@ -16,7 +16,11 @@ const command = new HearManager();
 vk.updates.on('message', command.middleware);
 
 vk.updates.on('message', async (context, next) => {
-    console.log('Пришло новое сообщение!');
+    console.log(`Пришло новое сообщение!
+    text: ${context.text},
+    type: ${context.type},
+    client: ${JSON.stringify(context.clientInfo)}
+    `);
     await next();
 });
 
@@ -26,20 +30,22 @@ command.hear('/start', async (context) => {
 })
 
 vk.updates.on('message_new', async (context, next) => {
-    const callback = context.senderId != config.kargin_id ? logBadWord.bind(this, context) : deleteMessage.bind(this, context);
-    check(context.text, callback);
-    next();
+    const callback = context.senderId != config.kargin_id ?
+        logBadWord.bind(this, context) :
+        deleteMessage.bind(this, context);
+    wordsFilter.check(context.text, callback);
+    await next();
 });
 
 vk.updates.on('message_new', async (context, next) => {
     const text = context.text;
     if (text && text.includes(COMMANDS.ADD)) {
-        add(text.substring(COMMANDS.ADD.length + 1));
+        wordsFilter.add(text.substring(COMMANDS.ADD.length + 1));
     }
     if (text && text.includes(COMMANDS.SHOW)) {
-        show(showAllWords.bind(this, context));
+        wordsFilter.show(showAllWords.bind(this, context));
     }
-    next();
+    await next();
 });
 
 function showAllWords(context, words) {
@@ -47,7 +53,7 @@ function showAllWords(context, words) {
 }
 
 function logBadWord(context) {
-    context.send('я бы это удалил, будь ты каргиным');
+    context.send('Я бы это удалил, будь ты каргиным');
 }
 
 function deleteMessage(context) {
@@ -56,6 +62,7 @@ function deleteMessage(context) {
         peer_id: context.peerId,
         delete_for_all: 1,
     });
+    wordsFilter.save(context.text)
 }
 
 vk.updates.start()
