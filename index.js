@@ -61,7 +61,7 @@ vk.updates.on('message', (context, next ) => {
     let foundInText = false;
     for (var i in blacklisted){
         if (context.text.toLowerCase().includes(blacklisted[i].toLowerCase())) foundInText = true;
-    }sadasd
+    }
 
     if (foundInText && context.senderId == 123456){
         vk.api.messages.delete({
