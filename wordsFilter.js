@@ -2,19 +2,21 @@ const dateformat = require('dateformat');
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('db');
 
+const suspiciousChars = [162, 165, 192,193,194,195,196,197,198,199,217,218,219,220,221,224,225,226,227,228,229,231,251,252,255];
+
 class WordsFilter {
     check(string, callback) {
         if (!string) {
             return;
         }
-        string = this.prepareString(string);
+        const string2 = this.prepareString(string);
         db.all("SELECT word FROM words", (error, rows) => {
             if (error) {
                 console.error(error);
                 return;
             }
-            const badMessage = rows.some(data => string.includes(data.word));
-            if (badMessage) {
+            const haveKWord = rows.some(data => string2.includes(data.word));
+            if (haveKWord || this.haveSuspiciousChars(string)) {
                 callback();
             }
         });
@@ -65,6 +67,16 @@ class WordsFilter {
         );
     }
 
+    haveSuspiciousChars(str) {
+        for (let i = 0; i < str.length; i++) {
+            const charCode = str.charCodeAt(i);
+            if (suspiciousChars.includes(charCode) || ( charCode > 255 && charCode < 1040)  || charCode > 1103) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     prepareString(string) {
         let withoutSymbols = string.replace(/[^a-zA-Zа-яА-Я]/g, '').toLowerCase();
         let stringtwo = "";
@@ -75,6 +87,14 @@ class WordsFilter {
         }
 
        return stringtwo;
+    }
+
+    isRussiaChar(code) {
+        return code >= 1040 && code <= 1103;
+    }
+
+    isEnglChar(code) {
+        return code >= 65 && code <= 122;
     }
 
 }
