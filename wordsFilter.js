@@ -19,6 +19,10 @@ function check(string, callback) {
 }
 
 function add(word) {
+    if (!word) {
+        return;
+    }
+    console.log(`Добавляем слово ${word}`);
     db.run(`INSERT INTO words(word) VALUES (?)`,
         [word],
         function(error){
