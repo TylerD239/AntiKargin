@@ -15,7 +15,7 @@ class WordsFilter {
                 console.error(error);
                 return;
             }
-            const haveKWord = rows.some(data => string2.includes(data.word));
+            const haveKWord = rows.some(data => string2.includes(data.word.toLowerCase()));
             if (haveKWord || this.haveSuspiciousChars(string)) {
                 callback();
             }
