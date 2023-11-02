@@ -33,7 +33,7 @@ function add(word) {
     }
     console.log(`Добавляем слово ${word}`);
     db.run(`INSERT INTO words(word) VALUES (?)`,
-        [word],
+        [word.toLowerCase()],
         function(error){
             if (error) {
                 return console.error(error);
