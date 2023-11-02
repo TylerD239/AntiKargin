@@ -66,7 +66,15 @@ class WordsFilter {
     }
 
     prepareString(string) {
-        return string.replace(/[^a-zA-Zа-яА-Я]/g, '').toLowerCase();
+        let withoutSymbols = string.replace(/[^a-zA-Zа-яА-Я]/g, '').toLowerCase();
+        let stringtwo = "";
+        const re = /(\S)\1/g;
+        while (stringtwo.length !== withoutSymbols.length) {
+            stringtwo = withoutSymbols;
+            withoutSymbols = stringtwo.replace(re, '');
+        }
+
+       return stringtwo;
     }
 
 }
