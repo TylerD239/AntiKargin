@@ -9,18 +9,32 @@ function check(string, callback) {
             return;
         }
         const badMessage = rows.some(data => string.includes(data.word));
-        console.log(badMessage)
         if (badMessage) {
             callback();
         }
     });
 }
 
+function add(word) {
+    db.run(`INSERT INTO words(word) VALUES (?)`,
+        [word],
+        function(error){
+            if (error) {
+                return console.error(error);
+            }
+            console.log(`word ${word} added`);
+        }
+    );
+}
+
 function prepareString(string) {
     return string.replace(/[^a-zA-Zа-яА-Я]/g, '').toLowerCase();
 }
 
-module.exports = check;
+
+
+module.exports.check = check;
+module.exports.add = add;
 
 
 
