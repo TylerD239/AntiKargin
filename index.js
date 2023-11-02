@@ -18,6 +18,7 @@ vk.updates.on('message', async (context, next) => {
 
 
 command.hear('/start', async (context) => {
+    console.log(context);
     context.send('Ну всё Антон, пизда тебе');
 })
 
@@ -25,13 +26,13 @@ vk.updates.on('message_new', async (context) => {
     if (context.senderId != config.kargin_id) {
         // return;
     }
-    check(context.text, () => deleteMessage(context.conversationMessageId, context.peerId))
+    check(context.text, () => deleteMessage(context))
 });
 
-function deleteMessage(id, peedId) {
+function deleteMessage(context) {
     vk.api.messages.delete({
-        conversation_message_ids: id,
-        peer_id: peedId,
+        conversation_message_ids: context.conversationMessageId,
+        peer_id: context.peerId,
         delete_for_all: 1,
     });
 }
