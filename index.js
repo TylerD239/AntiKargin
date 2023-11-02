@@ -18,8 +18,7 @@ vk.updates.on('message', command.middleware);
 vk.updates.on('message', async (context, next) => {
     console.log(`Пришло новое сообщение!
     text: ${context.text},
-    type: ${context.type},
-    client: ${JSON.stringify(context.clientInfo)}
+    type: ${context.type}
     `);
     await next();
 });
