@@ -52,7 +52,7 @@ function showAllWords(context, words) {
 }
 
 function logBadWord(context) {
-    context.send('Я бы это удалил, будь ты каргиным');
+    context.send('Я бы это удалил, будь ты каргиным', {reply_message: context});
 }
 
 function deleteMessage(context) {
