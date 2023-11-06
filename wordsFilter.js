@@ -17,6 +17,7 @@ class WordsFilter {
             }
             const haveKWord = rows.some(data => string2.includes(data.word.toLowerCase()));
             if (haveKWord || this.haveSuspiciousChars(string)) {
+                console.log(`Сообщение ${string} удалено`);
                 callback();
             }
         });
@@ -71,7 +72,8 @@ class WordsFilter {
         str = str.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,'')
         for (let i = 0; i < str.length; i++) {
             const charCode = str.charCodeAt(i);
-            if (suspiciousChars.includes(charCode) || ( charCode > 255 && charCode < 1040)  || charCode > 1103) {
+            if (suspiciousChars.includes(charCode) || ( charCode > 255 && charCode < 1040)  || charCode > 1105) {
+                console.log(`Запрещенный символ ${str[i]}, код: ${charCode}`)
                 return true;
             }
         }
