@@ -3,6 +3,15 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('db');
 
 const suspiciousChars = [162, 165, 192,193,194,195,196,197,198,199,217,218,219,220,221,224,225,226,227,228,229,231,251,252,255];
+const replacement = {
+    c: 'с',
+    o: 'о',
+    p: 'р',
+    y: 'у',
+    k: 'к',
+    e: 'е' //АНДРЕЙ ЕСЛИ ТЫ ЭТО ВИДИШЬ И ТЕЬЕ НЕ ВПАДЛУ, ТО ДОПИЛИ СЮДА ВСЕ ВАРИКИ ПЛЗ
+}
+
 
 class WordsFilter {
     check(string, callback) {
@@ -10,12 +19,13 @@ class WordsFilter {
             return;
         }
         const string2 = this.prepareString(string);
+        const string3 = this.prepareString(string, true);
         db.all("SELECT word FROM words", (error, rows) => {
             if (error) {
                 console.error(error);
                 return;
             }
-            const haveKWord = rows.some(data => string2.includes(data.word.toLowerCase()));
+            const haveKWord = rows.some(data => string2.includes(data.word.toLowerCase()) || string3.includes(data.word.toLowerCase()));
             if (haveKWord || this.haveSuspiciousChars(string)) {
                 console.log(`Сообщение ${string} удалено`);
                 callback();
@@ -80,7 +90,7 @@ class WordsFilter {
         return false;
     }
 
-    prepareString(string) {
+    prepareString(string, withReplace) {
         let withoutSymbols = string.replace(/[^a-zA-Zа-яА-Я]/g, '').toLowerCase();
         let stringtwo = "";
         const re = /(\S)\1/g;
@@ -89,7 +99,15 @@ class WordsFilter {
             withoutSymbols = stringtwo.replace(re, '');
         }
 
-       return stringtwo;
+        if (withReplace) {
+            let replacedString = '';
+            for (const char of stringtwo) {
+                replacedString+= replacement[char] || char;
+            }
+
+            return replacedString;
+        }
+        return stringtwo;
     }
 
     isRussiaChar(code) {
