@@ -36,6 +36,16 @@ vk.updates.on('message_new', async (context, next) => {
     await next();
 });
 
+vk.updates.use( async (context, next) => {
+    // const callback = context.senderId != config.kargin_id ?
+    //     logBadWord.bind(this, context) :
+    //     deleteMessage.bind(this, context);
+    // wordsFilter.check(context.text, callback);
+    // await next();
+    console.log(context.toString());
+    await next();
+});
+
 vk.updates.on('message_new', async (context, next) => {
     const text = context.text;
     if (text && text.includes(COMMANDS.ADD)) {
