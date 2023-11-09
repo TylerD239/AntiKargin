@@ -82,7 +82,7 @@ class WordsFilter {
         str = str.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,'')
         for (let i = 0; i < str.length; i++) {
             const charCode = str.charCodeAt(i);
-            if (suspiciousChars.includes(charCode) || ( charCode > 255 && charCode < 1040)  || (charCode > 1105 && charCode < 9812)) {
+            if (suspiciousChars.includes(charCode) || ( charCode > 255 && charCode < 1040)  || (charCode > 1105 && charCode < 8000) || (charCode > 8830 && charCode < 9812)) {
                 console.log(`Запрещенный символ ${str[i]}, код: ${charCode}`)
                 return true;
             }
