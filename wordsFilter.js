@@ -19,13 +19,12 @@ class WordsFilter {
             return;
         }
         const string2 = this.prepareString(string);
-        const string3 = this.prepareString(string, true);
         db.all("SELECT word FROM words", (error, rows) => {
             if (error) {
                 console.error(error);
                 return;
             }
-            const haveKWord = rows.some(data => string2.includes(data.word.toLowerCase()) || string3.includes(data.word.toLowerCase()));
+            const haveKWord = rows.some(data => string2.includes(data.word.toLowerCase()));
             if (haveKWord || this.haveSuspiciousChars(string)) {
                 console.log(`Сообщение ${string} удалено`);
                 callback();
@@ -90,25 +89,19 @@ class WordsFilter {
         return false;
     }
 
-    prepareString(string, withReplace) {
+    prepareString(string) {
         let withoutSymbols = string.replace(/[^a-zA-Zа-яА-Я]/g, '').toLowerCase();
         let stringtwo = "";
 
         for (let i = 0; i < withoutSymbols.length; i++) {
-            if (withoutSymbols[i + 1] !== withoutSymbols[i]) {
-                stringtwo += withoutSymbols[i];
+            const char1 = replacement[withoutSymbols[i]] || withoutSymbols[i];
+            const char2 = replacement[withoutSymbols[i +1 ]] || withoutSymbols[i + 1];
+            if (char1 !== char2) {
+                stringtwo += char1;
             }
         }
 
-        if (withReplace) {
-            let replacedString = '';
-            for (const char of stringtwo) {
-                replacedString+= replacement[char] || char;
-            }
-
-            return replacedString;
-        }
-        return stringtwo;
+            return stringtwo;
     }
 
     isRussiaChar(code) {
