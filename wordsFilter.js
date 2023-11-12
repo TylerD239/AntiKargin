@@ -93,10 +93,11 @@ class WordsFilter {
     prepareString(string, withReplace) {
         let withoutSymbols = string.replace(/[^a-zA-Zа-яА-Я]/g, '').toLowerCase();
         let stringtwo = "";
-        const re = /(\S)\1/g;
-        while (stringtwo.length !== withoutSymbols.length) {
-            stringtwo = withoutSymbols;
-            withoutSymbols = stringtwo.replace(re, '');
+
+        for (let i = 0; i < withoutSymbols.length; i++) {
+            if (withoutSymbols[i + 1] !== withoutSymbols[i]) {
+                stringtwo += withoutSymbols[i];
+            }
         }
 
         if (withReplace) {
