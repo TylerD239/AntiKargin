@@ -29,7 +29,7 @@ command.hear('/start', async (context) => {
 })
 
 vk.updates.on('message_new', async (context, next) => {
-    const callback = context.senderId != config.kargin_id ?
+    const callback = context.senderId !== config.kargin_id ?
         logBadWord.bind(this, context) :
         deleteMessage.bind(this, context);
     wordsFilter.check(context.text, callback);
@@ -42,7 +42,8 @@ vk.updates.use( async (context, next) => {
     //     deleteMessage.bind(this, context);
     // wordsFilter.check(context.text, callback);
     // await next();
-    console.log(context.toString());
+    // console.log(JSON.stringify(context));
+    // console.log(context.eventType);
     await next();
 });
 
@@ -53,6 +54,15 @@ vk.updates.on('message_new', async (context, next) => {
     }
     if (text && text.includes(COMMANDS.SHOW)) {
         wordsFilter.show(showAllWords.bind(this, context));
+    }
+
+    if (context.eventMemberId === config.renata_id) {
+        if (context.eventType === "chat_invite_user") {
+            renameChat(true);
+        }
+        if (context.eventType === "chat_kick_user") {
+            renameChat(false);
+        }
     }
     await next();
 });
@@ -86,3 +96,15 @@ function deleteMessage(context) {
 vk.updates.start()
     .then(() => console.log('Стартанул'))
     .catch(console.error);
+
+async function renameChat(withRenata) {
+    await vk.api.messages.editChat({
+        chat_id: 1,
+        title: withRenata ? config.chat_name_with_renata : config.chat_name_without_renata
+    });
+}
+
+// vk.api.messages.getConversationMembers({
+//     peer_id: 2000000001
+// }).then(data => console.log(JSON.stringify(data)));
+
