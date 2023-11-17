@@ -13,7 +13,7 @@ app.listen(port, () => {
 });
 
 app.get('/test', async (req, res) => {
-    db.all(`SELECT * FROM deletedMessages`, (error, rows) => {
+    db.all(`SELECT * FROM messages`, (error, rows) => {
         if (error) {
             console.error(error);
             return;
