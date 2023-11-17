@@ -69,7 +69,7 @@ class WordsFilter {
             return;
         }
         console.log(`Сохраняем сообщение ${text}`);
-        db.run(`INSERT INTO deletedMessages(text, timestamp)
+        db.run(`INSERT INTO messages(text, timestamp)
                 VALUES (?, ?)`,
             [text, `${dateformat(new Date(Date.now()), 'yyyy-mm-dd HH:MM:ss')}`],
             function (error) {
