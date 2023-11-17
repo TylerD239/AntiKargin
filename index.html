@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ебаклачная</title>
+    <style>
+        body {
+            padding: 20px;
+        }
+        .rainbow-animated {
+            background: linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-animation: rainbow 20s ease infinite;
+            animation: rainbow 20s ease infinite;
+            font-size: 45px;
+            line-height: 95px;
+            font-family: "brush script mt";
+        }
+
+        @-webkit-keyframes rainbow {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+    </style>
+</head>
+<body>
+<b class="rainbow-animated">Записки гомосексуалиста</b>
+<br>
+<div id="output"></div>
+</body>
+<script>
+    async function getMessages() {
+        const data = await fetch('/test');
+        const messages = await data.json();
+        messages.forEach(message => {
+            const textElement = document.createElement("tt");
+            textElement.innerHTML = message.text;
+            output.appendChild(textElement);
+            output.appendChild(document.createElement("hr"));
+        });
+    }
+    getMessages();
+</script>
+</html>
