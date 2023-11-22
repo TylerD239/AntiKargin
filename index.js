@@ -20,6 +20,15 @@ vk.updates.on('message', async (context, next) => {
     text: ${context.text},
     type: ${context.type}
     `);
+    
+    if (context.eventMemberId === config.renata_id) {
+        if (context.eventType === "chat_invite_user") {
+            renameChat(true);
+        }
+        if (context.eventType === "chat_kick_user") {
+            renameChat(false);
+        }
+    }
     await next();
 });
 
@@ -56,14 +65,6 @@ vk.updates.on('message_new', async (context, next) => {
         wordsFilter.show(showAllWords.bind(this, context));
     }
 
-    if (context.eventMemberId === config.renata_id) {
-        if (context.eventType === "chat_invite_user") {
-            renameChat(true);
-        }
-        if (context.eventType === "chat_kick_user") {
-            renameChat(false);
-        }
-    }
     await next();
 });
 
