@@ -5,7 +5,7 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('db');
 
 app.get('/', function (req, res) {
-    console.log(req);
+    console.log(req.body);
     res.sendFile(__dirname + "/index.html");
 })
 
